@@ -74,15 +74,18 @@ Para apenas verificar se existe uma nova versão e obter o link de download da a
 
 Exemplo:
 ```
-if VUpdate.VerificarAtualizacao('http://seusite.com/atualizacao.txt', TSelfUpdateDelphi.ObterVersaoAtualApp, VTempLinkAtualizacao) then
- begin
-  Edit1.Text:= VTempLinkAtualizacao;
-  TDialogService.ShowMessage('Há uma nova versão disponível para download.', nil);
- end
- else
- begin
-  TDialogService.ShowMessage('Seu app está atualizado.', nil);
- end;
+var
+  VTempLinkAtualizacao: string;
+begin
+ if VUpdate.VerificarAtualizacao('http://seusite.com/atualizacao.txt', TSelfUpdateDelphi.ObterVersaoAtualApp, VTempLinkAtualizacao) then
+  begin
+   Edit1.Text:= VTempLinkAtualizacao;
+   TDialogService.ShowMessage('Há uma nova versão disponível para download.', nil);
+  end
+  else
+  begin
+   TDialogService.ShowMessage('Seu app está atualizado.', nil);
+  end;
 ```
 
 **Verificar se há atualização e perguntar se deseja atualizar**
