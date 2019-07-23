@@ -23,7 +23,39 @@ OBS: O problema não existe nas versões 10.3 e 10.3.2 e por tanto a unit corrig
 
 No menu Project > Options  vá até Application > Entitlement List e habilite "Secure File Sharing".
 No mesmo menu, va em Application > Uses Permissions e habilite as permissões "Read External Storage" e "Write External Storage"
-Abra o arquivo AndroidManifest.template.xml do seu projeto e logo após a linha:
+Abra o arquivo AndroidManifest.template.xml do seu projeto e inclua 2 permissões especiais:
+
+1 - Localize o seguinte trecho:
+
+```
+<application android:persistent="%persistent%" 
+        android:restoreAnyVersion="%restoreAnyVersion%" 
+        android:label="%label%" 
+        android:debuggable="%debuggable%" 
+        android:largeHeap="%largeHeap%"
+        android:icon="%icon%"
+        android:theme="%theme%"
+        android:hardwareAccelerated="%hardwareAccelerated%"
+        android:resizeableActivity="false">
+```
+após `android:resizeableActivity="false"` e antes do fechamento `">"` adicione a seguinte linha:
+```
+		android:usesCleartextTraffic="true"
+```
+ficando da seguinte forma:
+```
+<application android:persistent="%persistent%" 
+        android:restoreAnyVersion="%restoreAnyVersion%" 
+        android:label="%label%" 
+        android:debuggable="%debuggable%" 
+        android:largeHeap="%largeHeap%"
+        android:icon="%icon%"
+        android:theme="%theme%"
+        android:hardwareAccelerated="%hardwareAccelerated%"
+        android:resizeableActivity="false"
+        android:usesCleartextTraffic="true">
+```
+2 - Logo após a linha:
 ```
 <uses-sdk android:minSdkVersion="%minSdkVersion%" android:targetSdkVersion="%targetSdkVersion%" />
 ```
