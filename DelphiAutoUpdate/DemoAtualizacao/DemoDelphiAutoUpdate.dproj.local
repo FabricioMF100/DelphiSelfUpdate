@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/07/12 07:11:43.000.824,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/09/26 20:34:26.000.970,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/07/18 15:12:33.000.786,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/07/20 10:04:23.000.573,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/07/20 10:18:52.000.109,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\UPrincipal.fmx=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.fmx</Transaction>
+    <Transaction>2019/07/20 10:18:52.000.109,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\UPrincipal.pas=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2019/07/20 10:19:12.000.363,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DemoDelphiAutoUpdate.dproj=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2019/07/20 10:26:58.000.368,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\Unit1.pas</Transaction>
+    <Transaction>2019/07/20 10:27:50.000.907,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiAutoUpdate\DelphiAutoUpdate.pas=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\Unit1.pas</Transaction>
+    <Transaction>2019/07/20 10:28:15.000.596,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiAutoUpdate\DelphiSelfUpdate.pas=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiAutoUpdate\DelphiAutoUpdate.pas</Transaction>
+    <Transaction>2019/07/20 10:28:39.000.022,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiSelfUpdate\DelphiSelfUpdate.pas=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiAutoUpdate\DelphiSelfUpdate.pas</Transaction>
+    <Transaction>2019/07/22 18:43:48.000.809,C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DemoAtualizacao\UPrincipal.pas=</Transaction>
+    <Transaction>2019/07/22 18:43:59.000.351,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\UPrincipal.pas</Transaction>
+    <Transaction>2019/07/22 18:44:19.000.911,=C:\Users\USUARIO\Documents\Embarcadero\Studio\Projects\DelphiAutoUpdate\DelphiSelfUpdate\DelphiSelfUpdate.pas</Transaction>
+  </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile iOSSimulator="iPhone5" Android="0022308984"/>
+	</ActiveMobileDevice>
+</BorlandProject>

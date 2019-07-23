@@ -1,0 +1,4 @@
+[App]
+Versao=1.0.1
+[Download]
+Link=http://www.soachoaki.com.br/Content/download/SoAchoAki.zip

@@ -1,0 +1,141 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 409
+  ClientWidth = 309
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object Layout1: TLayout
+    Align = Top
+    Size.Width = 309.000000000000000000
+    Size.Height = 49.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Text1: TText
+      Align = Client
+      Size.Width = 309.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Delphi AutoUpdate'
+      TextSettings.Font.Size = 16.000000000000000000
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+    end
+  end
+  object Layout2: TLayout
+    Align = Client
+    Padding.Left = 15.000000000000000000
+    Padding.Top = 15.000000000000000000
+    Padding.Right = 15.000000000000000000
+    Padding.Bottom = 15.000000000000000000
+    Size.Width = 309.000000000000000000
+    Size.Height = 159.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object EdtLinkApk: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 2
+      Position.X = 15.000000000000000000
+      Position.Y = 87.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Text3: TText
+      Align = Bottom
+      Position.X = 15.000000000000000000
+      Position.Y = 119.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Android'
+    end
+    object Text2: TText
+      Align = Top
+      Position.X = 15.000000000000000000
+      Position.Y = 62.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Link download apk'
+    end
+    object EdtLinkInfo: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 1
+      Text = 'http://www.soachoaki.com.br/Content/DelphiSelfUpdate.txt'
+      Position.X = 15.000000000000000000
+      Position.Y = 40.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Text4: TText
+      Align = Top
+      Position.X = 15.000000000000000000
+      Position.Y = 15.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 25.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Link informa'#231#227'o de vers'#227'o'
+    end
+  end
+  object Layout3: TLayout
+    Align = Bottom
+    Padding.Top = 7.000000000000000000
+    Position.Y = 208.000000000000000000
+    Size.Width = 309.000000000000000000
+    Size.Height = 201.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object Button3: TButton
+      Align = Top
+      Margins.Left = 15.000000000000000000
+      Margins.Top = 7.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Margins.Bottom = 7.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 140.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Baixar e atualizar'
+      OnClick = Button3Click
+    end
+    object Button1: TButton
+      Align = Top
+      Margins.Left = 15.000000000000000000
+      Margins.Top = 7.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Margins.Bottom = 7.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 14.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Verificar atualiza'#231#227'o'
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Align = Top
+      Margins.Left = 15.000000000000000000
+      Margins.Top = 7.000000000000000000
+      Margins.Right = 15.000000000000000000
+      Margins.Bottom = 7.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 77.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Verificar e atualizar'
+      OnClick = Button2Click
+    end
+  end
+end
