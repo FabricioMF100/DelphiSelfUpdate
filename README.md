@@ -13,7 +13,7 @@ Android 9
 
 **OBSERVAÇÃO IMPORTANTE PARA Delphi 10.3.1 (Somente 10.3.1)**
 
-Exite um bug na unit System.Net.HttpClient.pas original do Delphi 10.3.1 (Release 1) onde há problemas no uso com Thread, para resolver inclua a unit [DelphiAutoUpdate/HotFix 10.3.1/System.Net.HttpClient.pas](System.Net.HttpClient.pas) corrigida que se encontra na pasta "HotFix 10.3.1" dentro da pasta do seu projeto, isso forçará o Delphi a utilizar a unit corrigida ao invés da problematica.
+Exite um bug na unit System.Net.HttpClient.pas original do Delphi 10.3.1 (Release 1) onde há problemas no uso com Thread, para resolver inclua a unit [../DelphiAutoUpdate/HotFix 10.3.1/System.Net.HttpClient.pas](System.Net.HttpClient.pas) corrigida que se encontra na pasta "HotFix 10.3.1" dentro da pasta do seu projeto, isso forçará o Delphi a utilizar a unit corrigida ao invés da problematica.
 OBS: O problema não existe nas versões 10.3 e 10.3.2 e por tanto a unit corrigida não deve ser usada.
 
 > Cortesia: Gledston Reis - Obrigado!
