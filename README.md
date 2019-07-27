@@ -137,20 +137,20 @@ VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.Obter
 
 **1.0.2**
 
-Adicionado verificação de integridade do download por MD5
-Adicionado ferramenta para geração da sequência MD5
-Adicionado diretivas de compilação Android
-Adicionado opção para detalhar versões no diálogo do procedimento VerificarAtualizacaoEPerguntar
+Adicionado verificação de integridade do download por MD5 
+Adicionado ferramenta para geração da sequência MD5 
+Adicionado diretivas de compilação Android 
+Adicionado opção para detalhar versões no diálogo do procedimento VerificarAtualizacaoEPerguntar 
 
 **1.0.1**
 
-Demo modificada agora baixa uma versão atualizada da própria demo simulando uma atualização real substituindo a versão anterior
-Alterado de Indy para HttpClient (Agradecimento especial Gledston Reis pela dica e hotfix para 10.3.1)
-Adicionado tratamento de falha no download
-Corrigido problema que não inciava instalação no Android 5 e 6 (Agradecimento especial a Igor Bastos)
-Adicionado função para obter versão atual instalada
-Adicionado verificação de atualização por URL (via arquivo de texto)
-Testado no Android versões: 5.1, 6.0.1, 7.1, 8.1, 9 e 10
+Demo modificada agora baixa uma versão atualizada da própria demo simulando uma atualização real substituindo a versão anterior 
+Alterado de Indy para HttpClient (Agradecimento especial Gledston Reis pela dica e hotfix para 10.3.1) 
+Adicionado tratamento de falha no download 
+Corrigido problema que não inciava instalação no Android 5 e 6 (Agradecimento especial a Igor Bastos) 
+Adicionado função para obter versão atual instalada 
+Adicionado verificação de atualização por URL (via arquivo de texto) 
+Testado no Android versões: 5.1, 6.0.1, 7.1, 8.1, 9 e 10 
 
 **1.0.0**
 
