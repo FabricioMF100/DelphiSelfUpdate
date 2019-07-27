@@ -2,3 +2,4 @@
 Versao=1.0.1
 [Download]
 Link=http://www.soachoaki.com.br/Content/download/DemoDelphiAutoUpdate.zip
+MD5=3A381466CB0BB1E16CD5652EF8F7692E

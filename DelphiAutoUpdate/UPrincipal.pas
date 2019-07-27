@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Edit, FMX.DialogService,
   DelphiSelfUpdate,
-  FMX.Controls.Presentation, FMX.StdCtrls, FMX.Objects, FMX.Layouts, Androidapi.IOUtils;
+  FMX.Controls.Presentation, FMX.StdCtrls, FMX.Objects, FMX.Layouts;
 
 type
   TForm1 = class(TForm)
@@ -59,7 +59,7 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   //Exemplo verifica se há atualização e pergunta se deseja atualizar
-  VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.ObterVersaoAtualApp);
+  VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.ObterVersaoAtualApp, True);
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);

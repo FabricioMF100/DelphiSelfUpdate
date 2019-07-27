@@ -2,7 +2,7 @@ unit DelphiSelfUpdate;
 
 {
   SelfUpdate para Delphi - Escrito por Fabricio Marques
-  Versão: 1.0.1
+  Versão: 1.0.2
   
   https://github.com/FabricioMF100/DelphiSelfUpdate
 
@@ -49,9 +49,11 @@ interface
 uses
   System.SysUtils, System.Types, System.Classes, System.IOUtils,
   System.Net.HttpClient, System.Net.HttpClientComponent,
-  System.Permissions, System.Threading, System.IniFiles,
+  IdHashMessageDigest, System.IniFiles,
   Fmx.Objects, Fmx.StdCtrls, Fmx.Forms, Fmx.Types, System.UiTypes,
   FMX.DialogService, FMX.Dialogs,
+  {$IFDEF ANDROID}
+  System.Permissions,
   Androidapi.Helpers,
   Androidapi.JNI.GraphicsContentViewText,
   FMX.Platform.Android,
@@ -61,7 +63,9 @@ uses
   //Androidapi.JNI.App,
   Androidapi.JNI.Support,
   Androidapi.JNI.Os,
-  Androidapi.IOUtils;
+  Androidapi.IOUtils,
+  {$ENDIF}
+  System.Threading;
 
 type
   TSelfUpdateDelphiDownloading = class
@@ -87,7 +91,10 @@ type
   private
     FormBase: TForm;
     ErroDownload: boolean;
+    ChecagemMD5: String;
     { Private declarations }
+    procedure MensagemErro(StrMensagem: String);
+    function ChecarMD5(Stream: TStream; MD5: String): boolean;
     procedure ObterPermissoes;
     procedure ChamarInstalacao;
     procedure NetHTTPClientOnReceiveData(const Sender: TObject; AContentLength: Int64; AReadCount: Int64; var Abort: Boolean);
@@ -95,11 +102,14 @@ type
     function BaixarAtualizacao:boolean;
     procedure ProcessarAtualizacao;
     procedure DisplayRationale(const APermissions: TArray<string>; const APostRationaleProc: TProc);
+    {$IFDEF ANDROID}
     procedure ResultadoPermissoes(const APermissions: TArray<string>; const AGrantResults: TArray<TPermissionStatus>);
+    {$ENDIF}
   public
     { Public declarations }
+    VersaoAtualizacaoDisponivel: String;
     class function ObterVersaoAtualApp:string;
-    procedure VerificarAtualizacaoEPerguntar(LinkInfoVersao, VersaoAtual: string);
+    procedure VerificarAtualizacaoEPerguntar(LinkInfoVersao, VersaoAtual: string; MostrarVersao: boolean);
     function VerificarAtualizacao(LinkInfoVersao, VersaoAtual: string; var VLinkRetorno: string):boolean;
     procedure Atualizar(UrlDownload, NomeDoArquivoSalvar: string);
     constructor Create(AOwner: TForm);
@@ -113,7 +123,7 @@ procedure TSelfUpdateDelphi.Atualizar(UrlDownload, NomeDoArquivoSalvar: string);
 begin
   LinkDownload:= UrlDownload;
   NomeArquivoApk:= NomeDoArquivoSalvar;
-
+{$IFDEF ANDROID}
   //Caso seja Android 6 ou superior solicita permissão
   if TOSVersion.Major < 6 then
   begin
@@ -124,6 +134,7 @@ begin
     //Caso seja Android 5 ou inferior a permissão já é concedida
     ObterPermissoes;
   end;
+{$ENDIF}
 end;
 
 function TSelfUpdateDelphi.BaixarAtualizacao: boolean;
@@ -149,6 +160,23 @@ begin
         VHttp.Get(LinkDownload, VStreamArquivo);
       finally
         VHttp.Free;
+
+        //Checa a integridade caso a sequencia MD5 tenha sido fornecida
+        if String.IsNullOrEmpty(ChecagemMD5) = false then
+        begin
+          TThread.Synchronize(nil, procedure ()
+          begin
+            DialogoAndamento.PrgBAndamento.Value:= DialogoAndamento.PrgBAndamento.Max;
+            DialogoAndamento.TxtFazendoDownload.Text:= 'Download concluído';
+            DialogoAndamento.TxtAndamento.Text:= 'Verificando integridade do arquivo...';
+          end);
+          if ChecarMD5(VStreamArquivo, ChecagemMD5) = False then
+          begin
+            ErroDownload:= True;
+            MensagemErro('Ocorreu um problema no download e o arquivo baixado está corrompido ou inválido.' + sLineBreak + 'Deseja tentar novamente?');
+          end;
+        end;
+
         VStreamArquivo.Free;
 
         //Ao finalizar executa a instalação
@@ -160,7 +188,7 @@ begin
             DialogoAndamento.TxtFazendoDownload.Text:= 'Download concluído';
             DialogoAndamento.TxtAndamento.Text:= 'A instalação será iniciada...';
           end);
-          Sleep(1000);
+          Sleep(1500);
           TThread.Synchronize(nil, procedure ()
           begin
             ChamarInstalacao;
@@ -170,12 +198,15 @@ begin
 end;
 
 procedure TSelfUpdateDelphi.ChamarInstalacao;
+{$IFDEF ANDROID}
 var
   VArquivo:Jfile;
   Intent:JIntent;
   VUriArquivo: Jnet_Uri;
   VStrFileProvider: string;
+{$ENDIF}
 begin
+{$IFDEF ANDROID}
   VArquivo:=TJfile.JavaClass.init(StringToJstring(DiretorioDownload),StringToJstring(NomeArquivoApk));
 
   if TOSVersion.Major < 7 then
@@ -201,14 +232,33 @@ begin
   end;
   Intent.setDataAndType(VUriArquivo,StringToJstring('application/vnd.android.package-archive'));
   SharedActivityContext.startActivity(Intent);
+{$ENDIF}
+end;
 
+function TSelfUpdateDelphi.ChecarMD5(Stream: TStream; MD5: String): boolean;
+var
+  IdMD5: TIdHashMessageDigest5;
+begin
+//Faz a verificação de integridade do arquivo via MD5
+  IdMD5 := TIdHashMessageDigest5.Create;
+  Result:= False;
+  try
+    if IdMD5.HashStreamAsHex(Stream) = Md5 then
+    begin
+      Result := True;
+    end;
+  finally
+    IdMD5.Free;
+  end;
 end;
 
 constructor TSelfUpdateDelphi.Create(AOwner: TForm);
 begin
   FormBase:= AOwner;
   //Diretório de download
+  {$IFDEF ANDROID}
   DiretorioDownload:= GetSharedDownloadsDir;
+  {$ENDIF}
 end;
 
 procedure TSelfUpdateDelphi.DisplayRationale(const APermissions: TArray<string>; const APostRationaleProc: TProc);
@@ -219,6 +269,26 @@ begin
     begin
       APostRationaleProc;
     end)
+end;
+
+procedure TSelfUpdateDelphi.MensagemErro(StrMensagem: String);
+var
+  VMsg: TDialogService;
+begin
+//Mostra um diálogo perguntando se deseja tentar novamente
+ErroDownload:= true;
+VMsg:= TDialogService.Create;
+VMsg.PreferredMode:= TDialogService.TPreferredMode.Platform;
+TThread.Synchronize(nil, procedure ()
+  begin
+  VMsg.MessageDialog(StrMensagem, TMsgDlgType.mtConfirmation, FMX.Dialogs.mbYesNo, TMsgDlgBtn.mbYes, 0,
+    procedure(const AResult: TModalResult)
+    begin
+      case AResult of
+        mrYes: ProcessarAtualizacao;
+      end;
+    end);
+  end);
 end;
 
 procedure TSelfUpdateDelphi.NetHTTPClientOnReceiveData(const Sender: TObject;
@@ -235,25 +305,12 @@ end;
 
 procedure TSelfUpdateDelphi.NetHTTPClientOnRequestError(const Sender: TObject;
   const AError: string);
-var
-  VMsg: TDialogService;
 begin
 //Mostra um diálogo perguntando se deseja tentar novamente
-ErroDownload:= true;
-VMsg:= TDialogService.Create;
-VMsg.PreferredMode:= TDialogService.TPreferredMode.Platform;
-TThread.Synchronize(nil, procedure ()
-  begin
-  VMsg.MessageDialog('Houve um problema ao tentar concluir o download.' + sLineBreak + 'Deseja tentar novamente?' + sLineBreak + sLineBreak + 'Problema ocorrido: ' + AError, TMsgDlgType.mtConfirmation, FMX.Dialogs.mbYesNo, TMsgDlgBtn.mbYes, 0,
-    procedure(const AResult: TModalResult)
-    begin
-      case AResult of
-        mrYes: ProcessarAtualizacao;
-      end;
-    end);
-  end);
+MensagemErro('Houve um problema ao tentar concluir o download.' + sLineBreak + 'Deseja tentar novamente?' + sLineBreak + sLineBreak + 'Problema ocorrido: ' + AError);
 end;
 
+{$IFDEF ANDROID}
 procedure TSelfUpdateDelphi.ResultadoPermissoes(const APermissions: TArray<string>; const AGrantResults: TArray<TPermissionStatus>);
 begin
 //Caso seja permitido executa a atualização
@@ -265,6 +322,7 @@ begin
         end;
     end;
 end;
+{$ENDIF}
 
 function TSelfUpdateDelphi.VerificarAtualizacao(
   LinkInfoVersao, VersaoAtual: string; var VLinkRetorno: string): boolean;
@@ -272,8 +330,9 @@ var
   VHttp: TNetHTTPClient;
   VResponse: IHTTPResponse;
   VIniResposta: TMemIniFile;
-  VStrVersao: String;
+  //VStrVersao: String;
 begin
+{$IFDEF ANDROID}
 // Acessa o link e verifica as informações de versão
       VHttp:= TNetHTTPClient.Create(nil);
       try
@@ -287,15 +346,21 @@ begin
         begin
           //Carrega as informações e checa se a versão é diferente
           VIniResposta:= TMemIniFile.Create(VResponse.ContentStream);
-          VStrVersao:= VIniResposta.ReadString('App', 'Versao', '');
-          if (String.isNullOrEmpty(VStrVersao) = false) and (VStrVersao <> VersaoAtual) then
+          VersaoAtualizacaoDisponivel:= VIniResposta.ReadString('App', 'Versao', '');
+          if (String.isNullOrEmpty(VersaoAtualizacaoDisponivel) = false) and (VersaoAtualizacaoDisponivel <> VersaoAtual) then
           begin
             VLinkRetorno:= VIniResposta.ReadString('Download', 'Link', '');
             Result:= True;
+            if VIniResposta.ValueExists('Download', 'MD5') then
+            begin
+              ChecagemMD5:= VIniResposta.ReadString('Download', 'MD5', '');
+            end;
             end
             else
             begin
+{$ENDIF}
             Result:= False;
+{$IFDEF ANDROID}
           end;
           VIniResposta.Free;
         end;
@@ -305,13 +370,14 @@ begin
         VIniResposta.Free;
         Result:= False;
       end;
-
+{$ENDIF}
 end;
 
 procedure TSelfUpdateDelphi.VerificarAtualizacaoEPerguntar(
-  LinkInfoVersao, VersaoAtual: string);
+  LinkInfoVersao, VersaoAtual: string; MostrarVersao: boolean);
 var
   VMsg: TDialogService;
+  VStrMensagem: String;
   VLinkRetorno: string;
 begin
 //Mostra um diálogo perguntando se deseja atualizar caso haja atualização
@@ -319,7 +385,13 @@ begin
   begin
     VMsg:= TDialogService.Create;
     VMsg.PreferredMode:= TDialogService.TPreferredMode.Sync;
-    VMsg.MessageDialog('Há uma atualização disponível para o app.' + sLineBreak + 'Deseja atualizar agora?', TMsgDlgType.mtConfirmation, FMX.Dialogs.mbYesNo, TMsgDlgBtn.mbYes, 0,
+
+    VStrMensagem:= 'Há uma atualização disponível para o app.' + sLineBreak + 'Deseja atualizar agora?';
+    if MostrarVersao then
+    begin
+      VStrMensagem:= VStrMensagem + sLineBreak + 'Versão instalada: ' + VersaoAtual + sLineBreak + 'Atualização disponível: ' + VersaoAtualizacaoDisponivel;
+    end;
+    VMsg.MessageDialog(VStrMensagem, TMsgDlgType.mtConfirmation, FMX.Dialogs.mbYesNo, TMsgDlgBtn.mbYes, 0,
       procedure(const AResult: TModalResult)
       begin
         case AResult of
@@ -340,15 +412,19 @@ begin
 end;
 
 class function TSelfUpdateDelphi.ObterVersaoAtualApp: string;
+{$IFDEF ANDROID}
 var
   PackageManager: JPackageManager;
   PackageInfo: JPackageInfo;
+{$ENDIF}
 begin
   //Obtem a versão atual do app
+  {$IFDEF ANDROID}
   PackageManager := SharedActivityContext.getPackageManager;
   PackageInfo := PackageManager.getPackageInfo
   (SharedActivityContext.getPackageName, 0);
   result := JStringToString(PackageInfo.versionName);
+  {$ENDIF}
 end;
 
 procedure TSelfUpdateDelphi.ProcessarAtualizacao;

@@ -1,7 +1,7 @@
 # DelphiSelfUpdate
-Classe Delphi criada pra atualização e instalação de apps
+Classe Delphi criada pra verificação de atualizações e instalação de apps para Android
 
-Versão: 1.0.1
+Versão: 1.0.2
 
 **Versões do Android Testadas:**
 
@@ -9,7 +9,8 @@ Android 5.1,
 Android 6.0.1, 
 Android 7.1, 
 Android 8.1, 
-Android 9
+Android 9,
+Android 10
 
 **OBSERVAÇÃO IMPORTANTE PARA Delphi 10.3.1 (Somente 10.3.1)**
 
@@ -94,6 +95,7 @@ Exemplo DelphiSelfUpdate.txt:
 Versao=1.0.1
 [Download]
 Link=http://seusite.com/download/DemoDelphiAutoUpdate.apk
+MD5=SequenciaMD5ParaVerificaçãodeIntegridade(Opcional)
 ```
 
 Existem 2 formas de realizar a verificação de atualização que são elas:
@@ -122,11 +124,34 @@ begin
 
 **Verificar se há atualização e perguntar se deseja atualizar**
 
-Para verificar se existe uma nova versão e exibir uma mensagem para o usuário perguntando se deseja atualizar use a função VerificarAtualizacaoEPerguntar('Link do txt com informação de Versão', 'Versão Atual do app').
+Para verificar se existe uma nova versão e exibir uma mensagem para o usuário perguntando se deseja atualizar use a função VerificarAtualizacaoEPerguntar('Link do txt com informação de Versão', 'Versão Atual do app', BooleanMostrarVersãoNaMensagem).
 
 > Obs: a função TSelfUpdateDelphi.ObterVersaoAtualApp pode ser utilizada para obter a versão atual instalada.
 
 Exemplo:
 ```
-VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.ObterVersaoAtualApp);
+VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.ObterVersaoAtualApp, True);
 ```
+
+#Histórico de versões
+
+**1.0.2**
+
+Adicionado verificação de integridade do download por MD5
+Adicionado ferramenta para geração da sequência MD5
+Adicionado diretivas de compilação Android
+Adicionado opção para detalhar versões no diálogo do procedimento VerificarAtualizacaoEPerguntar
+
+**1.0.1**
+
+Demo modificada agora baixa uma versão atualizada da própria demo simulando uma atualização real substituindo a versão anterior
+Alterado de Indy para HttpClient (Agradecimento especial Gledston Reis pela dica e hotfix para 10.3.1)
+Adicionado tratamento de falha no download
+Corrigido problema que não inciava instalação no Android 5 e 6 (Agradecimento especial a Igor Bastos)
+Adicionado função para obter versão atual instalada
+Adicionado verificação de atualização por URL (via arquivo de texto)
+Testado no Android versões: 5.1, 6.0.1, 7.1, 8.1, 9 e 10
+
+**1.0.0**
+
+Primeira versão
