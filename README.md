@@ -133,7 +133,7 @@ Exemplo:
 VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.ObterVersaoAtualApp, True);
 ```
 
-#Histórico de versões
+# Histórico de versões
 
 **1.0.2**
 
