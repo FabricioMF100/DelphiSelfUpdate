@@ -19,6 +19,12 @@ OBS: O problema não existe nas versões 10.3 e 10.3.2 e por tanto a unit corrig
 
 > Cortesia: Gledston Reis - Obrigado!
 
+# Ajude-me a manter esse projeto:
+**Esse projeto é livre para uso e você pode usá-lo em suas aplicações como quiser!**
+
+**Se este projeto fui útil para você ou o ajudou de alguma forma e gostaria de me agradecer, me ajude me pagando um café! Além do café ser muito gostoso, me mantém acordado e disposto a atualizar e aperfeiçoar este projeto.**
+**No topo da página existe um botão "Sponsor" clicando nele há 2 links onde você pode escolher um deles para me apoiar, com isso serei muito grato a você. Obrigado**
+
 # Instruções:
 **Permissões Delphi 10.3 (Rio):**
 
