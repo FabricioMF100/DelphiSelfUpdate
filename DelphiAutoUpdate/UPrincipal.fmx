@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 409
+  ClientHeight = 473
   ClientWidth = 309
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -32,7 +32,7 @@ object Form1: TForm1
     Padding.Right = 15.000000000000000000
     Padding.Bottom = 15.000000000000000000
     Size.Width = 309.000000000000000000
-    Size.Height = 159.000000000000000000
+    Size.Height = 223.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
     object EdtLinkApk: TEdit
@@ -48,7 +48,7 @@ object Form1: TForm1
     object Text3: TText
       Align = Bottom
       Position.X = 15.000000000000000000
-      Position.Y = 119.000000000000000000
+      Position.Y = 183.000000000000000000
       Size.Width = 279.000000000000000000
       Size.Height = 25.000000000000000000
       Size.PlatformDefault = False
@@ -83,11 +83,40 @@ object Form1: TForm1
       Size.PlatformDefault = False
       Text = 'Link informa'#231#227'o de vers'#227'o'
     end
+    object Layout4: TLayout
+      Align = Top
+      Margins.Top = 10.000000000000000000
+      Position.X = 15.000000000000000000
+      Position.Y = 119.000000000000000000
+      Size.Width = 279.000000000000000000
+      Size.Height = 28.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Text5: TText
+        Align = Client
+        Margins.Right = 10.000000000000000000
+        Size.Width = 191.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Usar Download Manager:'
+        TextSettings.HorzAlign = Trailing
+      end
+      object SwDM: TSwitch
+        Align = Right
+        IsChecked = False
+        Position.X = 201.000000000000000000
+        Size.Width = 78.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        OnSwitch = SwDMSwitch
+      end
+    end
   end
   object Layout3: TLayout
     Align = Bottom
     Padding.Top = 7.000000000000000000
-    Position.Y = 208.000000000000000000
+    Position.Y = 272.000000000000000000
     Size.Width = 309.000000000000000000
     Size.Height = 201.000000000000000000
     Size.PlatformDefault = False

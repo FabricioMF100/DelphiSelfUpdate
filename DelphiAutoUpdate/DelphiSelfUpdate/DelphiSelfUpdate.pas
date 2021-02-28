@@ -2,7 +2,7 @@ unit DelphiSelfUpdate;
 
 {
   SelfUpdate para Delphi - Escrito por Fabricio Marques
-  Versão: 1.0.2
+  Versão: 1.0.3
   
   https://github.com/FabricioMF100/DelphiSelfUpdate
 
@@ -58,12 +58,14 @@ uses
   Androidapi.JNI.GraphicsContentViewText,
   FMX.Platform.Android,
   Androidapi.Jni.JavaTypes,
-  //Androidapi.JNIBridge,
+  Androidapi.JNIBridge,
   Androidapi.Jni.Net,
   //Androidapi.JNI.App,
   Androidapi.JNI.Support,
   Androidapi.JNI.Os,
   Androidapi.IOUtils,
+  Android.App.JNI.DownloadManager,
+  Android.BroadcastReceiver,
   {$ENDIF}
   System.Threading;
 
@@ -92,6 +94,7 @@ type
     FormBase: TForm;
     ErroDownload: boolean;
     ChecagemMD5: String;
+    VUsarDownloadManager: boolean;
     { Private declarations }
     procedure MensagemErro(StrMensagem: String);
     function ChecarMD5(Stream: TStream; MD5: String): boolean;
@@ -103,6 +106,8 @@ type
     procedure ProcessarAtualizacao;
     procedure DisplayRationale(const APermissions: TArray<string>; const APostRationaleProc: TProc);
     {$IFDEF ANDROID}
+    function BaixarAtualizacaoDownloadManager:boolean;//Somente Android
+    procedure DownloadManagerOnReceive(const Action: JString);
     procedure ResultadoPermissoes(const APermissions: TArray<string>; const AGrantResults: TArray<TPermissionStatus>);
     {$ENDIF}
   public
@@ -112,7 +117,10 @@ type
     procedure VerificarAtualizacaoEPerguntar(LinkInfoVersao, VersaoAtual: string; MostrarVersao: boolean);
     function VerificarAtualizacao(LinkInfoVersao, VersaoAtual: string; var VLinkRetorno: string):boolean;
     procedure Atualizar(UrlDownload, NomeDoArquivoSalvar: string);
-    constructor Create(AOwner: TForm);
+    constructor Create(AOwner: TForm; UsarDownloadManager: boolean = false);
+    property AndroidDownloadManager: boolean read VUsarDownloadManager write VUsarDownloadManager;
+  const
+    TituloDownloadManager: string = 'Fazendo download da atualização';
   end;
 
 implementation
@@ -197,6 +205,54 @@ begin
       end;
 end;
 
+{$IFDEF ANDROID}
+function TSelfUpdateDelphi.BaixarAtualizacaoDownloadManager: boolean;
+var
+  VArquivo:Jfile;
+  VUriArquivo: Jnet_Uri;
+  DMRequest  : JDownloadManager_Request;
+  DManager : JDownloadManager;
+  URI : Jnet_Uri;
+begin
+      ErroDownload:= false;
+      if FileExists(DiretorioDownload + PathDelim + NomeArquivoApk) then
+      begin
+        DeleteFile(DiretorioDownload + PathDelim + NomeArquivoApk);
+      end;
+
+      BroadcastReceiver.OnReceived := DownloadManagerOnReceive;
+      BroadcastReceiver.AddAction(
+      [
+        TJDownloadManager.JavaClass.ACTION_DOWNLOAD_COMPLETE
+      ]
+    );
+
+      //Criação do URI do arquivo de destino
+      VArquivo:=TJfile.JavaClass.init(StringToJstring(DiretorioDownload),StringToJstring(NomeArquivoApk));
+      VUriArquivo:= TJnet_Uri.JavaClass.fromFile(VArquivo);
+
+      //Inicialização do DownloadManager
+       URI := TJnet_Uri.JavaClass.parse(StringToJString(LinkDownload));
+       DMRequest  := TJDownloadManager_Request.JavaClass.init(URI);
+
+       DMRequest.setAllowedNetworkTypes(TJDownloadManager_Request.JavaClass.NETWORK_WIFI
+                  AND TJDownloadManager_Request.JavaClass.NETWORK_MOBILE);
+
+       DMRequest.setAllowedOverRoaming(False);
+       DMRequest.setTitle(StrToJCharSequence(TituloDownloadManager));
+       DMRequest.setDescription(StrToJCharSequence(VersaoAtualizacaoDisponivel));
+
+       DMRequest.setNotificationVisibility(TJDownloadManager_Request.JavaClass.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+       //DMRequest.setDestinationInExternalPublicDir(StringToJString(DiretorioDownload), StringToJString(NomeArquivoApk));
+       DMRequest.setDestinationUri(VUriArquivo);
+       DManager := TJDownloadManager.Wrap((TAndroidHelper.Context.getSystemService(TJContext.JavaClass.DOWNLOAD_SERVICE) as ILocalObject).GetObjectID);
+
+       DManager.enqueue(DMRequest);
+      //Fim DownloadManager
+end;
+{$ENDIF}
+
 procedure TSelfUpdateDelphi.ChamarInstalacao;
 {$IFDEF ANDROID}
 var
@@ -252,11 +308,13 @@ begin
   end;
 end;
 
-constructor TSelfUpdateDelphi.Create(AOwner: TForm);
+constructor TSelfUpdateDelphi.Create(AOwner: TForm; UsarDownloadManager: boolean = false);
 begin
   FormBase:= AOwner;
   //Diretório de download
+  VUsarDownloadManager:= false;
   {$IFDEF ANDROID}
+  VUsarDownloadManager:= UsarDownloadManager;
   DiretorioDownload:= GetSharedDownloadsDir;
   {$ENDIF}
 end;
@@ -270,6 +328,43 @@ begin
       APostRationaleProc;
     end)
 end;
+
+{$IFDEF ANDROID}
+procedure TSelfUpdateDelphi.DownloadManagerOnReceive(const Action: JString);
+var
+  VStreamArquivo: TFileStream;
+begin
+  VStreamArquivo:= TFileStream.Create(DiretorioDownload + PathDelim + NomeArquivoApk, fmOpenRead);
+
+  //Checa a integridade caso a sequencia MD5 tenha sido fornecida
+  if String.IsNullOrEmpty(ChecagemMD5) = false then
+  begin
+//    TThread.Synchronize(nil, procedure ()
+//    begin
+//      DialogoAndamento.PrgBAndamento.Value:= DialogoAndamento.PrgBAndamento.Max;
+//      DialogoAndamento.TxtFazendoDownload.Text:= 'Download concluído';
+//      DialogoAndamento.TxtAndamento.Text:= 'Verificando integridade do arquivo...';
+//    end);
+    if ChecarMD5(VStreamArquivo, ChecagemMD5) = False then
+    begin
+      ErroDownload:= True;
+      MensagemErro('Ocorreu um problema no download e o arquivo baixado está corrompido ou inválido.' + sLineBreak + 'Deseja tentar novamente?');
+    end;
+  end;
+
+  VStreamArquivo.Free;
+
+  //Ao finalizar executa a instalação
+  if ErroDownload = false then
+  begin
+    Sleep(1500);
+    TThread.Synchronize(nil, procedure ()
+    begin
+      ChamarInstalacao;
+    end);
+  end;
+end;
+{$ENDIF}
 
 procedure TSelfUpdateDelphi.MensagemErro(StrMensagem: String);
 var
@@ -431,6 +526,14 @@ procedure TSelfUpdateDelphi.ProcessarAtualizacao;
 var
   VTask: ITask;
 begin
+{$IFDEF ANDROID}
+if VUsarDownloadManager then
+begin
+  BaixarAtualizacaoDownloadManager;
+end
+else
+begin
+{$ENDIF}
 //Cria a Task(Thread) para download da atualização
   if DialogoAndamento = nil then
   begin
@@ -444,6 +547,9 @@ begin
         BaixarAtualizacao;
       end);
     VTask.Start;
+{$IFDEF ANDROID}
+end;
+{$ENDIF}
 end;
 
 { TSelfUpdateDelphiDownloading }

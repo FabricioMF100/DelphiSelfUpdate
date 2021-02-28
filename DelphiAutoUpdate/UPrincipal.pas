@@ -22,10 +22,14 @@ type
     Button2: TButton;
     EdtLinkInfo: TEdit;
     Text4: TText;
+    Text5: TText;
+    Layout4: TLayout;
+    SwDM: TSwitch;
     procedure Button3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure SwDMSwitch(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,8 +81,13 @@ end;
 
 procedure TForm1.FormShow(Sender: TObject);
 begin
-  VUpdate:= TSelfUpdateDelphi.Create(Self);
+  VUpdate:= TSelfUpdateDelphi.Create(Self, SwDM.IsChecked); //True para usar o DownloadManager
   Text3.Text:= 'Android ' + IntToStr(TOSVersion.Major) + '.' + IntToStr(TOSVersion.Minor) + ' - Versão Apk: ' + TSelfUpdateDelphi.ObterVersaoAtualApp;
+end;
+
+procedure TForm1.SwDMSwitch(Sender: TObject);
+begin
+VUpdate.AndroidDownloadManager:= SwDM.IsChecked;
 end;
 
 end.

@@ -82,12 +82,29 @@ begin
   VUpdate:= TSelfUpdateDelphi.Create(Form1);
 ```
 
+Para usar o AndroidDownloadManager por padrão, o objeto pode ser criado da seguinte forma:
+```
+var
+  VUpdate: TSelfUpdateDelphi;
+begin
+  VUpdate:= TSelfUpdateDelphi.Create(Form1, true); //True para usar o DownloadManager
+```
+
+**O que é o AndroidDownloadManager?**
+É o gerenciador de downloads nativo do Android, ao usar essa opção o download será feito pelo Android, com isso o próprio sistema operacional irá lidar com as falhas de conexão e tomar as decisões corretas, além disso o download passa a funcionar em segundo plano oque pode ser ideal em aplicações muito grandes ou conexões lentas.
+
 **Download e instalação simples**
 
  Chame o methodo Atualizar('Url de download do apk', 'nome do arquivo para salvar');
 
 Exemplo:
 ```
+  VUpdate.Atualizar('http://meusite.com/download/NomeDoApp.apk', 'MeuApp.apk');
+```
+
+Exemplo com AndroidDownloadManager:
+```
+  VUpdate.AndroidDownloadManager:= True;
   VUpdate.Atualizar('http://meusite.com/download/NomeDoApp.apk', 'MeuApp.apk');
 ```
 
@@ -140,6 +157,11 @@ VUpdate.VerificarAtualizacaoEPerguntar(EdtLinkInfo.Text, TSelfUpdateDelphi.Obter
 ```
 
 # Histórico de versões
+
+**1.1.0**
+
+Adicionado suporte ao DownloadManager nativo do Android
+
 
 **1.0.2**
 
